@@ -1,0 +1,434 @@
+// ============================================================================
+//                   **** SEED Virtual Reality Platform ****
+//                Copyright (C) 2019-2020, Suisei Entertainment
+// ============================================================================
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+
+syntax = "proto3";
+package seed.cli;
+
+import "common.proto";
+
+// ============================================================================
+//  CONNECTION MESSAGES
+// ============================================================================
+message SEED_CLI_CONNECT_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+    required string         ClientID = 2;   // The UUID of the client.
+}
+
+message SEED_CLI_CONNECT_RSP
+{
+    enum Results
+    {
+        UNKNOWN = 0;            // Result cannot be determined
+        CONNECT_CFM = 1;        // Connection request confirmed
+        CONNECT_REJ = 2;        // Connection request rejected
+    }
+
+    enum RejectReasons
+    {
+        UNKNOWN = 0;            // Rejected for unknown reason
+        ALREADY_CONNECTED = 1;  // There is already an active CLI connection
+                                // to the node
+        CLI_DISABLED = 2;       // The CLI is not enabled on the node.
+    }
+
+    required MessageHeader  Header = 1;         // The message header.
+    required Results        Result = 2;         // The result of the connection
+                                                // request.
+    optional RejectReasons  RejectReason = 3;   // The reason code why the
+                                                // connection was rejected.
+    optional string         WelcomeMessage = 4; // Optional welcome message
+                                                // sent by the node.
+}
+
+// ============================================================================
+//  DISCONNECT MESSAGES
+// ============================================================================
+
+message SEED_CLI_DISCONNECT_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_DISCONNECT_RSP
+{
+    required MessageHeader  Header = 1;         // The message header.
+    optional string         ExitMessage = 2;    // Optional disconnect message
+                                                // sent by the node.
+}
+
+// ============================================================================
+//  AUTHENTICATION MESSAGES
+// ============================================================================
+
+message SEED_CLI_AUTH_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+    required string         Username = 2;   // The username of the connecting
+                                            // user.
+}
+
+message SEED_CLI_AUTH_CHALLENGE_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+    required string         Challenge = 2;  // The challenge request.
+}
+
+message SEED_CLI_AUTH_CHALLENGE_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+    required string         Challenge = 2;  // The challenge response.
+}
+
+message SEED_CLI_AUTH_RSP
+{
+    enum Results
+    {
+        UNKNOWN = 0;                // Result cannot be determined.
+        AUTH_CFM = 1;               // Authentication successful.
+        AUTH_REJ = 2;               // Authentication failed.
+    }
+
+    enum RejectReasons
+    {
+        UNKNOWN = 0;                // Rejected for unknown reason.
+        INVALID_USERNAME = 1;       // Invalid username provided.
+        INVALID_PASSWORD = 2;       // Invalid password provided.
+        ACCOUNT_UNAUTHORIZED = 3;   // Account is not authorized to use the
+                                    // CLI.
+        ACCOUNT_BANNED = 4;         // The account has been banned.
+        ACCOUNT_SUSPENDED = 5;      // The account has been suspended
+                                    // temporarily.
+        ACCOUNT_DELETED = 6;        // The account has been deleted.
+    }
+
+    required MessageHeader  Header = 1;     // The message header.
+    required Results        Result = 2;     // The result of the authentication
+                                            // request.
+    optional RejectReasons  RejectReason = 2;   // The reason code why the
+                                                // authentication was rejected.
+    optional string         Token = 3;          // The unique access token
+                                                // associated with the
+                                                // connection.
+}
+
+// ============================================================================
+//  MO OPERATIONS
+// ============================================================================
+
+message SEED_CLI_MO_CREATE_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_MO_CREATE_RSP
+{
+    enum Results
+    {
+        UNKNOWN = 0;                    // Result cannot be determined.
+        CREATE_CFM = 1;                 // MO creation successful.
+        CREATE_REJ = 2;                 // MO creation failed.
+    }
+
+    enum RejectReasons
+    {
+        UNKNOWN = 0;
+        ACCOUNT_UNAUTHORIZED = 1;       // Account is not authorized to create
+                                        // managed objects.
+        INVALID_INPUT = 2;              // Invalid input was provided.
+    }
+
+    required MessageHeader  Header = 1;         // The message header.
+    required Results        Result = 2;         // The result of the request.
+    optional RejectReasons  RejectReason = 3;   // The reason code why the
+                                                // request was rejected.
+}
+
+message SEED_CLI_MO_DELETE_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_MO_DELETE_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_MO_GET_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_MO_GET_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_MO_SET_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_MO_SET_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+// ============================================================================
+//  PERFORMANCE MANAGEMENT OPERATIONS
+// ============================================================================
+
+message SEED_CLI_PM_GET_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_PM_GET_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_PM_RESET_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_PM_RESET_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+// ============================================================================
+//  FAULT MANAGEMENT OPERATIONS
+// ============================================================================
+
+message SEED_CLI_FM_GET_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_FM_GET_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_FM_SET_REQ
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+message SEED_CLI_FM_SET_RSP
+{
+    required MessageHeader  Header = 1;     // The message header.
+}
+
+// ============================================================================
+//  CLI MESSAGE INTERFACE
+// ============================================================================
+service CLIService
+{
+    //  Contains the definition of the CLI service running on the node.
+    //
+    //  Client Connection and Authentication
+    // ===================================================
+    //
+    //  +---------+                        +-------+
+    //  | Client  |                        | Node  |
+    //  +---------+                        +-------+
+    //       |                                 |
+    //       | SEED_CLI_CONNECT_REQ            |
+    //       |-------------------------------->|
+    //       |                                 |
+    //       |            SEED_CLI_CONNECT_RSP |
+    //       |<--------------------------------|
+    //       |                                 |
+    //       | SEED_CLI_AUTH_REQ               |
+    //       |-------------------------------->|
+    //       |                                 |
+    //       |     SEED_CLI_AUTH_CHALLENGE_REQ |
+    //       |<--------------------------------|
+    //       |                                 |
+    //       | SEED_CLI_AUTH_CHALLENGE_RSP     |
+    //       |-------------------------------->|
+    //       |                                 |
+    //       |               SEED_CLI_AUTH_RSP |
+    //       |<--------------------------------|
+    //       |                                 |
+    //
+
+    rpc ConnectionRequest(SEED_CLI_CONNECT_REQ)
+        returns (SEED_CLI_CONNECT_RSP);
+
+    rpc AuthenticationRequest(SEED_CLI_AUTH_REQ)
+        returns (SEED_CLI_AUTH_CHALLENGE_REQ);
+
+    rpc ChallengeResponse(SEED_CLI_AUTH_CHALLENGE_RSP)
+        returns (SEED_CLI_AUTH_RSP);
+
+    //  MO Creation
+    // ===================================================
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_MO_CREATE_REQ     |
+    //      |--------------------------->|
+    //      |                            |
+    //      |     SEED_CLI_MO_CREATE_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc MOCreateRequest(SEED_CLI_MO_CREATE_REQ)
+        returns (SEED_CLI_MO_CREATE_RSP);
+
+    //  MO Deletion
+    // ===================================================
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_MO_DELETE_REQ     |
+    //      |--------------------------->|
+    //      |                            |
+    //      |     SEED_CLI_MO_DELETE_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc MODeleteRequest(SEED_CLI_MO_DELETE_REQ)
+        returns (SEED_CLI_MO_DELETE_RSP);
+
+    //  Retrieving MO Attributes
+    // ===================================================
+    //
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_MO_GET_REQ        |
+    //      |--------------------------->|
+    //      |                            |
+    //      |        SEED_CLI_MO_GET_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc MOGetRequest(SEED_CLI_MO_GET_REQ)
+        returns (SEED_CLI_MO_GET_RSP);
+
+    //  Changing MO Attributes
+    // ===================================================
+    //
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_MO_SET_REQ        |
+    //      |--------------------------->|
+    //      |                            |
+    //      |        SEED_CLI_MO_SET_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc MOSetRequest(SEED_CLI_MO_SET_REQ)
+        returns (SEED_CLI_MO_SET_RSP);
+
+    //  PM Counter Retrieval
+    // ===================================================
+    //
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_PM_GET_REQ        |
+    //      |--------------------------->|
+    //      |                            |
+    //      |        SEED_CLI_PM_GET_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc PMGetRequest(SEED_CLI_PM_GET_REQ)
+        returns (SEED_CLI_PM_GET_RSP);
+
+    //  Resetting PM Counter Values
+    // ===================================================
+    //
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_PM_RESET_REQ      |
+    //      |--------------------------->|
+    //      |                            |
+    //      |      SEED_CLI_PM_RESET_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc PMResetRequest(SEED_CLI_PM_RESET_REQ)
+        returns (SEED_CLI_PM_RESET_RSP);
+
+    //  Retrieving Fault Information
+    // ===================================================
+    //
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_FM_GET_REQ        |
+    //      |--------------------------->|
+    //      |                            |
+    //      |        SEED_CLI_FM_GET_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc FMGetRequest(SEED_CLI_FM_GET_REQ)
+        returns (SEED_CLI_FM_GET_RSP);
+
+    //  Changing Fault Information
+    // ===================================================
+    //
+    //
+    //  +---------+                   +-------+
+    //  | Client  |                   | Node  |
+    //  +---------+                   +-------+
+    //      |                            |
+    //      | SEED_CLI_FM_SET_REQ        |
+    //      |--------------------------->|
+    //      |                            |
+    //      |        SEED_CLI_FM_SET_RSP |
+    //      |<---------------------------|
+    //      |                            |
+    //
+
+    rpc FMSetRequest(SEED_CLI_FM_SET_REQ)
+        returns (SEED_CLI_FM_SET_RSP);
+}

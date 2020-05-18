@@ -1,0 +1,50 @@
+// ============================================================================
+//                   **** SEED Virtual Reality Platform ****
+//                Copyright (C) 2019-2020, Suisei Entertainment
+// ============================================================================
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+
+syntax = "proto3";
+package seed.common;
+
+message ProtocolVersion
+{
+    // Represents the protocol version used in the message.
+
+    required uint32      Major = 1;      // Major version
+    required uint32      Minor = 2;      // Minor version
+    required uint32      Patch = 3;      // Patch level
+}
+
+message NodeIdentifier
+{
+    // Represents a unique identifier that identifies a given node during an
+    // active connection.
+
+    required string      NodeID = 1;    // Unique identifier of the node that
+                                        // sent the message.
+    required string      Token = 2;     // Unique access token identifying the
+                                        // connection.
+}
+
+message MessageHeader
+{
+    // Represents the common header in all messages of the protocol.
+    required ProtocolVersion     Version = 1;        // The protocol version.
+    required NodeIdentifier      Node = 2;           // THe node identifier.
+    required uint32              MessageID = 3;      // The type of message.
+}
